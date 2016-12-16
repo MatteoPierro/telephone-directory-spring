@@ -37,10 +37,27 @@ public class ContactControllerTest {
                 .andExpect(jsonPath("$[0].number", is(TELEPHONE_NUMBER)));
     }
 
+    @Test
+    public void
+    returns_a_contact_by_id() throws Exception {
+        Contact contact = new Contact();
+        contact.setFirstName(FIRST_NAME);
+        contact.setLastName(LAST_NAME);
+        contact.setNumber(TELEPHONE_NUMBER);
+        when(repository.findBy(AN_ID)).thenReturn(contact);
 
-    public static final String FIRST_NAME = "A FIRST NAME";
-    public static final String LAST_NAME = "A LAST NAME";
-    public static final String TELEPHONE_NUMBER = "A TELEPHONE NUMBER";
+        mockMvc.perform(get("/contacts/"+AN_ID))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstName", is(FIRST_NAME)))
+                .andExpect(jsonPath("$.lastName", is(LAST_NAME)))
+                .andExpect(jsonPath("$.number", is(TELEPHONE_NUMBER)));
+    }
+
+
+    private static final Integer AN_ID = 1;
+    private static final String FIRST_NAME = "A FIRST NAME";
+    private static final String LAST_NAME = "A LAST NAME";
+    private static final String TELEPHONE_NUMBER = "A TELEPHONE NUMBER";
 
     @InjectMocks
     ContactController controller;

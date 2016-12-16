@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class InMemoryContactRepository implements ContactRepository {
 
-    public final static Map<Integer, Contact> CONTACTS = new ConcurrentHashMap<>();
+    private final static Map<Integer, Contact> CONTACTS = new ConcurrentHashMap<>();
 
     static {
         Contact matteo = new Contact();
@@ -27,5 +27,10 @@ public class InMemoryContactRepository implements ContactRepository {
     @Override
     public List<Contact> all() {
         return new ArrayList<>(CONTACTS.values());
+    }
+
+    @Override
+    public Contact findBy(Integer id) {
+        return CONTACTS.get(id);
     }
 }
