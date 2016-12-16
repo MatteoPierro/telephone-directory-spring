@@ -35,4 +35,12 @@ public class InMemoryContactRepository implements ContactRepository {
     public Contact findBy(Integer id) {
         return CONTACTS.get(id);
     }
+
+    @Override
+    public synchronized Contact save(Contact contact) {
+        int id = CONTACTS.size() + 1;
+        contact.setId(id);
+        CONTACTS.put(id, contact);
+        return contact;
+    }
 }

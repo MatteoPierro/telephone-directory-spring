@@ -7,4 +7,6 @@ public interface ContactRepository {
     List<Contact> all();
 
     Contact findBy(Integer id);
+
+    Contact save(Contact contact);
 }
