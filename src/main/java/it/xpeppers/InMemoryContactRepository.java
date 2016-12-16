@@ -32,7 +32,7 @@ public class InMemoryContactRepository implements ContactRepository {
     }
 
     @Override
-    public Contact findBy(Integer id) {
+    public Contact withId(Integer id) {
         return CONTACTS.get(id);
     }
 

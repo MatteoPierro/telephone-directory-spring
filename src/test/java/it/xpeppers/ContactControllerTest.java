@@ -27,7 +27,7 @@ public class ContactControllerTest {
 
     @Test
     public void
-    returns_the_list_of_contacts() throws Exception {
+    returns_all_contacts() throws Exception {
         Contact contact = new Contact();
         contact.setId(ID);
         contact.setFirstName(FIRST_NAME);
@@ -46,13 +46,13 @@ public class ContactControllerTest {
 
     @Test
     public void
-    returns_a_contact_by_id() throws Exception {
+    returns_a_contact_with_a_given_id() throws Exception {
         Contact contact = new Contact();
         contact.setId(ID);
         contact.setFirstName(FIRST_NAME);
         contact.setLastName(LAST_NAME);
         contact.setNumber(TELEPHONE_NUMBER);
-        when(repository.findBy(ID)).thenReturn(contact);
+        when(repository.withId(ID)).thenReturn(contact);
 
         mockMvc.perform(get("/contacts/"+ ID))
                 .andExpect(status().isOk())

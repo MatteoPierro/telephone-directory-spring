@@ -21,21 +21,25 @@ public class ContactController {
     ContactRepository repository;
 
     @RequestMapping(method = GET)
-    public List<Contact> allContacts() {
+    public List<Contact> all() {
         return repository.all();
     }
 
     @RequestMapping("/{id}")
-    public Contact contactWith(@PathVariable("id") Integer id) {
-        return repository.findBy(id);
+    public Contact withId(@PathVariable("id") Integer id) {
+        return repository.withId(id);
     }
 
     @RequestMapping(method = POST)
-    public ResponseEntity<?> saveContact(@RequestBody Contact contact) {
+    public ResponseEntity<?> save(@RequestBody Contact contact) {
         Contact savedContact = repository.save(contact);
         return ResponseEntity
-                .created(URI.create("/contacts/"+savedContact.getId()))
+                .created(uriFor(savedContact))
                 .build();
+    }
+
+    private URI uriFor(Contact savedContact) {
+        return URI.create("/contacts/" + savedContact.getId());
     }
 
 }
