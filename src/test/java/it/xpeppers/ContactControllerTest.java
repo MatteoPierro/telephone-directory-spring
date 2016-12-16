@@ -24,6 +24,7 @@ public class ContactControllerTest {
     public void
     returns_the_list_of_contacts() throws Exception {
         Contact contact = new Contact();
+        contact.setId(ID);
         contact.setFirstName(FIRST_NAME);
         contact.setLastName(LAST_NAME);
         contact.setNumber(TELEPHONE_NUMBER);
@@ -32,6 +33,7 @@ public class ContactControllerTest {
         mockMvc.perform(get("/contacts"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].id", is(ID)))
                 .andExpect(jsonPath("$[0].firstName", is(FIRST_NAME)))
                 .andExpect(jsonPath("$[0].lastName", is(LAST_NAME)))
                 .andExpect(jsonPath("$[0].number", is(TELEPHONE_NUMBER)));
@@ -41,20 +43,22 @@ public class ContactControllerTest {
     public void
     returns_a_contact_by_id() throws Exception {
         Contact contact = new Contact();
+        contact.setId(ID);
         contact.setFirstName(FIRST_NAME);
         contact.setLastName(LAST_NAME);
         contact.setNumber(TELEPHONE_NUMBER);
-        when(repository.findBy(AN_ID)).thenReturn(contact);
+        when(repository.findBy(ID)).thenReturn(contact);
 
-        mockMvc.perform(get("/contacts/"+AN_ID))
+        mockMvc.perform(get("/contacts/"+ ID))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(ID)))
                 .andExpect(jsonPath("$.firstName", is(FIRST_NAME)))
                 .andExpect(jsonPath("$.lastName", is(LAST_NAME)))
                 .andExpect(jsonPath("$.number", is(TELEPHONE_NUMBER)));
     }
 
 
-    private static final Integer AN_ID = 1;
+    private static final Integer ID = 1;
     private static final String FIRST_NAME = "A FIRST NAME";
     private static final String LAST_NAME = "A LAST NAME";
     private static final String TELEPHONE_NUMBER = "A TELEPHONE NUMBER";

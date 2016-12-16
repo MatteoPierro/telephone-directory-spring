@@ -2,6 +2,7 @@ package it.xpeppers;
 
 public class Contact {
 
+    private Integer id;
     private String firstName;
     private String lastName;
     private String number;
@@ -28,5 +29,13 @@ public class Contact {
 
     public String getNumber() {
         return number;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

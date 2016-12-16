@@ -11,11 +11,13 @@ public class InMemoryContactRepository implements ContactRepository {
 
     static {
         Contact matteo = new Contact();
+        matteo.setId(1);
         matteo.setFirstName("Matteo");
         matteo.setLastName("Pierro");
         matteo.setNumber("+39 329 654321");
 
         Contact joe = new Contact();
+        joe.setId(2);
         joe.setFirstName("Joe");
         joe.setLastName("Bew");
         joe.setNumber("+39 329 123456");
