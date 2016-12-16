@@ -1,11 +1,17 @@
 package it.xpeppers;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+
 public class Contact {
 
     private Integer id;
     private String firstName;
     private String lastName;
     private String number;
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
@@ -17,6 +23,10 @@ public class Contact {
 
     public void setNumber(String number) {
         this.number = number;
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public String getFirstName() {
@@ -31,11 +41,8 @@ public class Contact {
         return number;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
+    @Override
+    public boolean equals(Object obj) {
+        return EqualsBuilder.reflectionEquals(this, obj);
     }
 }
