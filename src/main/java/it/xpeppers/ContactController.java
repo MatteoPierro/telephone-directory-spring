@@ -10,8 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.net.URI;
 import java.util.List;
 
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
 @RequestMapping("/contacts")
@@ -25,7 +24,7 @@ public class ContactController {
         return repository.all();
     }
 
-    @RequestMapping("/{id}")
+    @RequestMapping(value = "/{id}", method = GET)
     public Contact withId(@PathVariable("id") Integer id) {
         return repository.withId(id);
     }
@@ -35,6 +34,15 @@ public class ContactController {
         Contact savedContact = repository.save(contact);
         return ResponseEntity
                 .created(uriFor(savedContact))
+                .build();
+    }
+
+    @RequestMapping(value = "/{id}", method = PUT)
+    public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody Contact contact) {
+        contact.setId(id);
+        repository.save(contact);
+        return ResponseEntity
+                .noContent()
                 .build();
     }
 

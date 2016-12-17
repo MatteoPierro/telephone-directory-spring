@@ -14,12 +14,12 @@ import java.io.IOException;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -79,10 +79,27 @@ public class ContactControllerTest {
         when(repository.save(contact)).thenReturn(savedContact);
 
         mockMvc.perform(post("/contacts")
-                .header("Location", "/contacts/"+ID)
                 .contentType(APPLICATION_JSON)
                 .content(json(contact)))
+                .andExpect(header().string("Location", "/contacts/"+ID))
                 .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void
+    updates_a_valid_contact() throws Exception {
+        Contact contact = new Contact();
+        contact.setId(ID);
+        contact.setFirstName(ANOTHER_FIRST_NAME);
+        contact.setLastName(LAST_NAME);
+        contact.setNumber(TELEPHONE_NUMBER);
+
+        mockMvc.perform(put("/contacts/"+ID)
+                .contentType(APPLICATION_JSON)
+                .content(json(contact)))
+                .andExpect(status().isNoContent());
+
+        verify(repository).save(eq(contact));
     }
 
 
@@ -90,6 +107,7 @@ public class ContactControllerTest {
     private static final String FIRST_NAME = "A FIRST NAME";
     private static final String LAST_NAME = "A LAST NAME";
     private static final String TELEPHONE_NUMBER = "+39 02 123456";
+    private static final String ANOTHER_FIRST_NAME = "ANOTHER FIRST NAME";
 
     @InjectMocks
     ContactController controller;

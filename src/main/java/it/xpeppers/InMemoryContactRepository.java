@@ -38,9 +38,21 @@ public class InMemoryContactRepository implements ContactRepository {
 
     @Override
     public synchronized Contact save(Contact contact) {
-        int id = CONTACTS.size() + 1;
+        Integer id = idFor(contact);
+
         contact.setId(id);
         CONTACTS.put(id, contact);
+
         return contact;
+    }
+
+    private Integer idFor(Contact contact) {
+        Integer id = contact.getId();
+
+        if(id == null) {
+            id = CONTACTS.size() + 1;
+        }
+
+        return id;
     }
 }
