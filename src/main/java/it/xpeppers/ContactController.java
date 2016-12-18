@@ -46,6 +46,15 @@ public class ContactController {
                 .build();
     }
 
+    @RequestMapping(value = "/{id}", method = DELETE)
+    public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
+        Contact contact = repository.withId(id);
+        repository.delete(contact);
+        return ResponseEntity
+                .noContent()
+                .build();
+    }
+
     private URI uriFor(Contact savedContact) {
         return URI.create("/contacts/" + savedContact.getId());
     }

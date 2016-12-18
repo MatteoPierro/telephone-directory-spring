@@ -102,6 +102,23 @@ public class ContactControllerTest {
         verify(repository).save(eq(contact));
     }
 
+    @Test
+    public void
+    removes_a_contact() throws Exception {
+        Contact contact = new Contact();
+        contact.setId(ID);
+        contact.setFirstName(ANOTHER_FIRST_NAME);
+        contact.setLastName(LAST_NAME);
+        contact.setNumber(TELEPHONE_NUMBER);
+
+        when(repository.withId(ID)).thenReturn(contact);
+
+        mockMvc.perform(delete("/contacts/"+ID))
+                .andExpect(status().isNoContent());
+
+        verify(repository).delete(eq(contact));
+    }
+
 
     private static final Integer ID = 1;
     private static final String FIRST_NAME = "A FIRST NAME";

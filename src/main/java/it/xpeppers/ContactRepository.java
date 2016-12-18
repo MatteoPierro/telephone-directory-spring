@@ -9,4 +9,7 @@ public interface ContactRepository {
     Contact withId(Integer id);
 
     Contact save(Contact contact);
+
+    void delete(Contact contact);
+
 }

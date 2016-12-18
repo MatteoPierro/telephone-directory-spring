@@ -46,6 +46,11 @@ public class InMemoryContactRepository implements ContactRepository {
         return contact;
     }
 
+    @Override
+    public void delete(Contact contact) {
+        CONTACTS.remove(contact.getId());
+    }
+
     private Integer idFor(Contact contact) {
         Integer id = contact.getId();
 
