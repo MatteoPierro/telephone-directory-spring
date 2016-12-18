@@ -33,6 +33,7 @@ public class ContactControllerTest {
         contact.setFirstName(FIRST_NAME);
         contact.setLastName(LAST_NAME);
         contact.setNumber(TELEPHONE_NUMBER);
+
         when(repository.all()).thenReturn(singletonList(contact));
 
         mockMvc.perform(get("/contacts"))
@@ -52,6 +53,7 @@ public class ContactControllerTest {
         contact.setFirstName(FIRST_NAME);
         contact.setLastName(LAST_NAME);
         contact.setNumber(TELEPHONE_NUMBER);
+
         when(repository.withId(ID)).thenReturn(contact);
 
         mockMvc.perform(get("/contacts/"+ ID))
@@ -90,16 +92,29 @@ public class ContactControllerTest {
     updates_a_valid_contact() throws Exception {
         Contact contact = new Contact();
         contact.setId(ID);
-        contact.setFirstName(ANOTHER_FIRST_NAME);
+        contact.setFirstName(FIRST_NAME);
         contact.setLastName(LAST_NAME);
         contact.setNumber(TELEPHONE_NUMBER);
 
+        when(repository.withId(ID)).thenReturn(contact);
+
+        Contact update = new Contact();
+        update.setFirstName(ANOTHER_FIRST_NAME);
+        update.setLastName(LAST_NAME);
+        update.setNumber(TELEPHONE_NUMBER);
+
         mockMvc.perform(put("/contacts/"+ID)
                 .contentType(APPLICATION_JSON)
-                .content(json(contact)))
+                .content(json(update)))
                 .andExpect(status().isNoContent());
 
-        verify(repository).save(eq(contact));
+        Contact updatedContact = new Contact();
+        updatedContact.setId(ID);
+        updatedContact.setFirstName(ANOTHER_FIRST_NAME);
+        updatedContact.setLastName(LAST_NAME);
+        updatedContact.setNumber(TELEPHONE_NUMBER);
+
+        verify(repository).save(eq(updatedContact));
     }
 
     @Test
@@ -127,12 +142,12 @@ public class ContactControllerTest {
     private static final String ANOTHER_FIRST_NAME = "ANOTHER FIRST NAME";
 
     @InjectMocks
-    ContactController controller;
+    private ContactController controller;
 
     @Mock
-    ContactRepository repository;
+    private ContactRepository repository;
 
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @Before
     public void setUp() throws Exception {
@@ -140,7 +155,7 @@ public class ContactControllerTest {
                 .build();
     }
 
-    protected String json(Object o) throws IOException {
+    private String json(Object o) throws IOException {
         return new ObjectMapper().writeValueAsString(o);
     }
 }

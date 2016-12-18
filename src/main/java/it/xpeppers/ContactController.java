@@ -38,8 +38,11 @@ public class ContactController {
     }
 
     @RequestMapping(value = "/{id}", method = PUT)
-    public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody Contact contact) {
-        contact.setId(id);
+    public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody Contact update) {
+        Contact contact = repository.withId(id);
+
+        contact.update(update);
+
         repository.save(contact);
         return ResponseEntity
                 .noContent()
@@ -49,7 +52,9 @@ public class ContactController {
     @RequestMapping(value = "/{id}", method = DELETE)
     public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
         Contact contact = repository.withId(id);
+
         repository.delete(contact);
+
         return ResponseEntity
                 .noContent()
                 .build();

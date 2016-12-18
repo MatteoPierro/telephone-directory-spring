@@ -45,4 +45,10 @@ public class Contact {
     public boolean equals(Object obj) {
         return EqualsBuilder.reflectionEquals(this, obj);
     }
+
+    public void update(Contact update) {
+        this.firstName = update.firstName;
+        this.lastName = update.lastName;
+        this.number = update.number;
+    }
 }
