@@ -54,4 +54,17 @@ public class ContactTest {
 
         assertThat(violations, is(not(empty())));
     }
+
+    @Test
+    public void
+    telephone_should_not_be_empty() throws Exception {
+        Contact contact = new Contact();
+        contact.setFirstName(A_VALID_FIRST_NAME);
+        contact.setLastName(A_VALID_LAST_NAME);
+        contact.setNumber(AN_EMPTY_STRING);
+
+        Set<ConstraintViolation<Contact>> violations = validator.validate(contact);
+
+        assertThat(violations, is(not(empty())));
+    }
 }

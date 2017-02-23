@@ -3,6 +3,8 @@ package it.xpeppers;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.Pattern;
+
 public class Contact {
 
     private Integer id;
@@ -12,6 +14,8 @@ public class Contact {
 
     @NotEmpty
     private String lastName;
+
+    @Pattern(regexp = "\\+[0-9]+\\s[0-9]+\\s[0-9]{6,}")
     private String number;
 
     public void setId(Integer id) {
