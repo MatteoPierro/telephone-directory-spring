@@ -34,7 +34,7 @@ public class ContactControllerTest {
         contact.setId(ID);
         contact.setFirstName(FIRST_NAME);
         contact.setLastName(LAST_NAME);
-        contact.setNumber(TELEPHONE_NUMBER);
+        contact.setPhoneNumber(TELEPHONE_NUMBER);
 
         when(repository.all()).thenReturn(singletonList(contact));
 
@@ -44,7 +44,7 @@ public class ContactControllerTest {
                 .andExpect(jsonPath("$[0].id", is(ID)))
                 .andExpect(jsonPath("$[0].firstName", is(FIRST_NAME)))
                 .andExpect(jsonPath("$[0].lastName", is(LAST_NAME)))
-                .andExpect(jsonPath("$[0].number", is(TELEPHONE_NUMBER)));
+                .andExpect(jsonPath("$[0].phoneNumber", is(TELEPHONE_NUMBER)));
     }
 
     @Test
@@ -54,7 +54,7 @@ public class ContactControllerTest {
         contact.setId(ID);
         contact.setFirstName(FIRST_NAME);
         contact.setLastName(LAST_NAME);
-        contact.setNumber(TELEPHONE_NUMBER);
+        contact.setPhoneNumber(TELEPHONE_NUMBER);
 
         when(repository.withId(ID)).thenReturn(contact);
 
@@ -63,7 +63,7 @@ public class ContactControllerTest {
                 .andExpect(jsonPath("$.id", is(ID)))
                 .andExpect(jsonPath("$.firstName", is(FIRST_NAME)))
                 .andExpect(jsonPath("$.lastName", is(LAST_NAME)))
-                .andExpect(jsonPath("$.number", is(TELEPHONE_NUMBER)));
+                .andExpect(jsonPath("$.phoneNumber", is(TELEPHONE_NUMBER)));
     }
 
     @Test
@@ -73,12 +73,12 @@ public class ContactControllerTest {
         savedContact.setId(ID);
         savedContact.setFirstName(FIRST_NAME);
         savedContact.setLastName(LAST_NAME);
-        savedContact.setNumber(TELEPHONE_NUMBER);
+        savedContact.setPhoneNumber(TELEPHONE_NUMBER);
 
         Contact contact = new Contact();
         contact.setFirstName(FIRST_NAME);
         contact.setLastName(LAST_NAME);
-        contact.setNumber(TELEPHONE_NUMBER);
+        contact.setPhoneNumber(TELEPHONE_NUMBER);
 
         when(repository.save(contact)).thenReturn(savedContact);
 
@@ -108,14 +108,14 @@ public class ContactControllerTest {
         contact.setId(ID);
         contact.setFirstName(FIRST_NAME);
         contact.setLastName(LAST_NAME);
-        contact.setNumber(TELEPHONE_NUMBER);
+        contact.setPhoneNumber(TELEPHONE_NUMBER);
 
         when(repository.withId(ID)).thenReturn(contact);
 
         Contact update = new Contact();
         update.setFirstName(ANOTHER_FIRST_NAME);
         update.setLastName(LAST_NAME);
-        update.setNumber(TELEPHONE_NUMBER);
+        update.setPhoneNumber(TELEPHONE_NUMBER);
 
         mockMvc.perform(put("/contacts/"+ID)
                 .contentType(APPLICATION_JSON)
@@ -126,7 +126,7 @@ public class ContactControllerTest {
         updatedContact.setId(ID);
         updatedContact.setFirstName(ANOTHER_FIRST_NAME);
         updatedContact.setLastName(LAST_NAME);
-        updatedContact.setNumber(TELEPHONE_NUMBER);
+        updatedContact.setPhoneNumber(TELEPHONE_NUMBER);
 
         verify(repository).save(eq(updatedContact));
     }
@@ -138,7 +138,7 @@ public class ContactControllerTest {
         contact.setId(ID);
         contact.setFirstName(ANOTHER_FIRST_NAME);
         contact.setLastName(LAST_NAME);
-        contact.setNumber(TELEPHONE_NUMBER);
+        contact.setPhoneNumber(TELEPHONE_NUMBER);
 
         when(repository.withId(ID)).thenReturn(contact);
 

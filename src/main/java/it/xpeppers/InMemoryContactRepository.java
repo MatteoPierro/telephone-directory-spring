@@ -14,13 +14,13 @@ public class InMemoryContactRepository implements ContactRepository {
         matteo.setId(1);
         matteo.setFirstName("Matteo");
         matteo.setLastName("Pierro");
-        matteo.setNumber("+39 329 654321");
+        matteo.setPhoneNumber("+39 329 654321");
 
         Contact joe = new Contact();
         joe.setId(2);
         joe.setFirstName("Joe");
         joe.setLastName("Bew");
-        joe.setNumber("+39 329 123456");
+        joe.setPhoneNumber("+39 329 123456");
 
         CONTACTS.put(1, matteo);
         CONTACTS.put(2, joe);

@@ -16,7 +16,7 @@ public class Contact {
     private String lastName;
 
     @Pattern(regexp = "\\+[0-9]+\\s[0-9]+\\s[0-9]{6,}")
-    private String number;
+    private String phoneNumber;
 
     public void setId(Integer id) {
         this.id = id;
@@ -30,8 +30,8 @@ public class Contact {
         this.lastName = lastName;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public Integer getId() {
@@ -46,8 +46,8 @@ public class Contact {
         return lastName;
     }
 
-    public String getNumber() {
-        return number;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
     @Override
@@ -58,6 +58,6 @@ public class Contact {
     public void update(Contact update) {
         this.firstName = update.firstName;
         this.lastName = update.lastName;
-        this.number = update.number;
+        this.phoneNumber = update.phoneNumber;
     }
 }
