@@ -14,7 +14,9 @@ import java.io.IOException;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -85,6 +87,18 @@ public class ContactControllerTest {
                 .content(json(contact)))
                 .andExpect(header().string("Location", "/contacts/"+ID))
                 .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void
+    does_not_saves_an_invalid_contact() throws Exception {
+        verify(repository, never()).save(any());
+
+        Contact invalidContact = new Contact();
+        mockMvc.perform(post("/contacts")
+                .contentType(APPLICATION_JSON)
+                .content(json(invalidContact)))
+                .andExpect(status().isBadRequest());
     }
 
     @Test

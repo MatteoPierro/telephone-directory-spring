@@ -1,10 +1,13 @@
 package it.xpeppers;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.hibernate.validator.constraints.NotEmpty;
 
 public class Contact {
 
     private Integer id;
+
+    @NotEmpty
     private String firstName;
     private String lastName;
     private String number;

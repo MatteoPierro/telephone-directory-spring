@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class ContactController {
     }
 
     @RequestMapping(method = POST)
-    public ResponseEntity<?> save(@RequestBody Contact contact) {
+    public ResponseEntity<?> save(@Valid @RequestBody Contact contact) {
         Contact savedContact = repository.save(contact);
         return ResponseEntity
                 .created(uriFor(savedContact))
@@ -38,7 +39,7 @@ public class ContactController {
     }
 
     @RequestMapping(value = "/{id}", method = PUT)
-    public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody Contact update) {
+    public ResponseEntity<?> update(@PathVariable("id") Integer id, @Valid @RequestBody Contact update) {
         Contact contact = repository.withId(id);
 
         contact.update(update);
