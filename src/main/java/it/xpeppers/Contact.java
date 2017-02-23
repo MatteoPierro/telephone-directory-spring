@@ -9,6 +9,8 @@ public class Contact {
 
     @NotEmpty
     private String firstName;
+
+    @NotEmpty
     private String lastName;
     private String number;
 
