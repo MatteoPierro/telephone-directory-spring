@@ -17,7 +17,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 public class ContactController {
 
     @Autowired
-    ContactRepository repository;
+    private ContactRepository repository;
 
     @RequestMapping(method = GET)
     public List<Contact> all() {
