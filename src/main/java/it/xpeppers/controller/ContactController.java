@@ -1,5 +1,7 @@
-package it.xpeppers;
+package it.xpeppers.controller;
 
+import it.xpeppers.repository.ContactRepository;
+import it.xpeppers.model.Contact;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;

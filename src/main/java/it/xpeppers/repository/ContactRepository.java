@@ -1,4 +1,6 @@
-package it.xpeppers;
+package it.xpeppers.repository;
+
+import it.xpeppers.model.Contact;
 
 import java.util.List;
 

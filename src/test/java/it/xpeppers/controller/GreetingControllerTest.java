@@ -1,4 +1,4 @@
-package it.xpeppers;
+package it.xpeppers.controller;
 
 import org.junit.Before;
 import org.junit.Test;

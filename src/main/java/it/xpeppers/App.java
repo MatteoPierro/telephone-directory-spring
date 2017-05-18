@@ -1,5 +1,7 @@
 package it.xpeppers;
 
+import it.xpeppers.infrastructure.repository.InMemoryContactRepository;
+import it.xpeppers.repository.ContactRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;

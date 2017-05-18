@@ -1,6 +1,8 @@
-package it.xpeppers;
+package it.xpeppers.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.xpeppers.repository.ContactRepository;
+import it.xpeppers.model.Contact;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

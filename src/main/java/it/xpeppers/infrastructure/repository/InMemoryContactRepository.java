@@ -1,4 +1,7 @@
-package it.xpeppers;
+package it.xpeppers.infrastructure.repository;
+
+import it.xpeppers.model.Contact;
+import it.xpeppers.repository.ContactRepository;
 
 import java.util.ArrayList;
 import java.util.List;

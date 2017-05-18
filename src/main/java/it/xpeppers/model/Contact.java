@@ -1,4 +1,4 @@
-package it.xpeppers;
+package it.xpeppers.model;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.hibernate.validator.constraints.NotEmpty;
