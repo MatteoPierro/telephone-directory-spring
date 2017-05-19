@@ -17,7 +17,7 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class JPAContactRepositoryAdapterTest {
+public class JPAContactRepositoryAdapterIT {
 
     @Autowired
     private JPAContactRepositoryAdapter repositoryAdapter;

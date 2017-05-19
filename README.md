@@ -24,14 +24,21 @@ $ mvn spring-boot:run
 
 ## Run Test
 
-### Create test schema
+### Run Unit Test
+
+```bash
+$ mvn clean test
+```
+
+### Run Integration Test
+
+#### Create test schema
 
 ```bash
 postgres=# create database contacts_test;
 ```
 
-### Run Test
-
+#### Run
 ```bash
-$ mvn clean test
+$ mvn integration-test -P integration-test
 ```

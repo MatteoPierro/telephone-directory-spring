@@ -1,6 +1,5 @@
 package it.xpeppers.model;
 
-import it.xpeppers.model.Contact;
 import org.junit.Before;
 import org.junit.Test;
 
