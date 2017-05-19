@@ -21,3 +21,17 @@ postgres=# create database contacts;
 ```bash
 $ mvn spring-boot:run
 ```
+
+## Run Test
+
+### Create test schema
+
+```bash
+postgres=# create database contacts_test;
+```
+
+### Run Test
+
+```bash
+$ mvn clean test
+```
