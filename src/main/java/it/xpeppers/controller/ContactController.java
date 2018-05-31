@@ -15,6 +15,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
@@ -33,7 +34,7 @@ public class ContactController {
     public ResponseEntity<Contact> withId(@PathVariable("id") Integer id) {
         return repository.withId(id)
                 .map(ResponseEntity::ok)
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+                .orElse(new ResponseEntity<>(NOT_FOUND));
     }
 
     @RequestMapping(method = POST)
@@ -45,43 +46,35 @@ public class ContactController {
     }
 
     @RequestMapping(value = "/{id}", method = PUT)
-    public ResponseEntity<?> update(@PathVariable("id") Integer id, @Valid @RequestBody Contact update) {
-        Optional<Contact> contact = repository.withId(id);
-
-        if (contact.isPresent()) {
-            contact.get().update(update);
-
-            repository.save(contact.get());
-            return ResponseEntity
-                    .noContent()
-                    .build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-
+    public ResponseEntity<Void> update(@PathVariable("id") Integer id, @Valid @RequestBody Contact update) {
+        return repository.withId(id)
+                .map(contact -> update(contact, update))
+                .orElse(new ResponseEntity<>(NOT_FOUND));
     }
 
     @RequestMapping(value = "/{id}", method = DELETE)
-    public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
-        Optional<Contact> contact = repository.withId(id);
+    public ResponseEntity<Void> delete(@PathVariable("id") Integer id) {
+        return repository.withId(id)
+                .map(this::delete)
+                .orElse(new ResponseEntity<>(NOT_FOUND));
+    }
 
-        if (contact.isPresent()) {
-            repository.delete(contact.get());
+    private ResponseEntity<Void> update(Contact contact, Contact update) {
+        contact.update(update);
+        repository.save(contact);
+        return ResponseEntity
+                .noContent()
+                .build();
+    }
 
-            return ResponseEntity
-                    .noContent()
-                    .build();
-        } else {
-            return ResponseEntity
-                    .notFound()
-                    .build();
-        }
-
-
+    private ResponseEntity<Void> delete(Contact contact) {
+        repository.delete(contact);
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 
     private URI uriFor(Contact savedContact) {
         return URI.create("/contacts/" + savedContact.getId());
     }
-
 }
