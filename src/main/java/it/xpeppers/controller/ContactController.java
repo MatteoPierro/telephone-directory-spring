@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
@@ -28,8 +29,14 @@ public class ContactController {
     }
 
     @RequestMapping(value = "/{id}", method = GET)
-    public Contact withId(@PathVariable("id") Integer id) {
-        return repository.withId(id);
+    public ResponseEntity<?> withId(@PathVariable("id") Integer id) {
+        Optional<Contact> contact = repository.withId(id);
+
+        if (contact.isPresent()) {
+            return ResponseEntity.ok(contact.get());
+        }else{
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @RequestMapping(method = POST)
@@ -42,25 +49,38 @@ public class ContactController {
 
     @RequestMapping(value = "/{id}", method = PUT)
     public ResponseEntity<?> update(@PathVariable("id") Integer id, @Valid @RequestBody Contact update) {
-        Contact contact = repository.withId(id);
+        Optional<Contact> contact = repository.withId(id);
 
-        contact.update(update);
+        if (contact.isPresent()) {
+            contact.get().update(update);
 
-        repository.save(contact);
-        return ResponseEntity
-                .noContent()
-                .build();
+            repository.save(contact.get());
+            return ResponseEntity
+                    .noContent()
+                    .build();
+        }else{
+            return ResponseEntity.notFound().build();
+        }
+
     }
 
     @RequestMapping(value = "/{id}", method = DELETE)
     public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
-        Contact contact = repository.withId(id);
+        Optional<Contact> contact = repository.withId(id);
 
-        repository.delete(contact);
+        if (contact.isPresent()) {
+            repository.delete(contact.get());
 
-        return ResponseEntity
-                .noContent()
-                .build();
+            return ResponseEntity
+                    .noContent()
+                    .build();
+        }else{
+            return ResponseEntity
+                    .notFound()
+                    .build();
+        }
+
+
     }
 
     private URI uriFor(Contact savedContact) {
