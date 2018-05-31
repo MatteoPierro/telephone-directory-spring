@@ -34,7 +34,7 @@ public class ContactController {
 
         if (contact.isPresent()) {
             return ResponseEntity.ok(contact.get());
-        }else{
+        } else {
             return ResponseEntity.notFound().build();
         }
     }
@@ -58,7 +58,7 @@ public class ContactController {
             return ResponseEntity
                     .noContent()
                     .build();
-        }else{
+        } else {
             return ResponseEntity.notFound().build();
         }
 
@@ -74,7 +74,7 @@ public class ContactController {
             return ResponseEntity
                     .noContent()
                     .build();
-        }else{
+        } else {
             return ResponseEntity
                     .notFound()
                     .build();
