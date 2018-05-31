@@ -33,13 +33,8 @@ public class ContactControllerTest {
     @Test
     public void
     returns_all_contacts() throws Exception {
-        Contact contact = new Contact();
-        contact.setId(ID);
-        contact.setFirstName(FIRST_NAME);
-        contact.setLastName(LAST_NAME);
-        contact.setPhoneNumber(TELEPHONE_NUMBER);
 
-        when(repository.all()).thenReturn(singletonList(contact));
+        when(repository.all()).thenReturn(singletonList(aContact()));
 
         mockMvc.perform(get("/contacts"))
                 .andExpect(status().isOk())
@@ -53,13 +48,8 @@ public class ContactControllerTest {
     @Test
     public void
     returns_a_contact_with_a_given_id() throws Exception {
-        Contact contact = new Contact();
-        contact.setId(ID);
-        contact.setFirstName(FIRST_NAME);
-        contact.setLastName(LAST_NAME);
-        contact.setPhoneNumber(TELEPHONE_NUMBER);
 
-        when(repository.withId(ID)).thenReturn(Optional.ofNullable(contact));
+        when(repository.withId(ID)).thenReturn(Optional.ofNullable(aContact()));
 
         mockMvc.perform(get("/contacts/"+ ID))
                 .andExpect(status().isOk())
@@ -81,18 +71,13 @@ public class ContactControllerTest {
     @Test
     public void
     saves_a_valid_contact() throws Exception {
-        Contact savedContact = new Contact();
-        savedContact.setId(ID);
-        savedContact.setFirstName(FIRST_NAME);
-        savedContact.setLastName(LAST_NAME);
-        savedContact.setPhoneNumber(TELEPHONE_NUMBER);
 
         Contact contact = new Contact();
         contact.setFirstName(FIRST_NAME);
         contact.setLastName(LAST_NAME);
         contact.setPhoneNumber(TELEPHONE_NUMBER);
 
-        when(repository.save(contact)).thenReturn(savedContact);
+        when(repository.save(contact)).thenReturn(aContact());
 
         mockMvc.perform(post("/contacts")
                 .contentType(APPLICATION_JSON)
@@ -116,29 +101,17 @@ public class ContactControllerTest {
     @Test
     public void
     updates_a_valid_contact() throws Exception {
-        Contact contact = new Contact();
-        contact.setId(ID);
-        contact.setFirstName(FIRST_NAME);
-        contact.setLastName(LAST_NAME);
-        contact.setPhoneNumber(TELEPHONE_NUMBER);
 
-        when(repository.withId(ID)).thenReturn(Optional.ofNullable(contact));
+        when(repository.withId(ID)).thenReturn(Optional.ofNullable(aContact()));
 
-        Contact update = new Contact();
-        update.setFirstName(ANOTHER_FIRST_NAME);
-        update.setLastName(LAST_NAME);
-        update.setPhoneNumber(TELEPHONE_NUMBER);
+        Contact update = anotherContactWithoutID();
 
         mockMvc.perform(put("/contacts/"+ID)
                 .contentType(APPLICATION_JSON)
                 .content(json(update)))
                 .andExpect(status().isNoContent());
 
-        Contact updatedContact = new Contact();
-        updatedContact.setId(ID);
-        updatedContact.setFirstName(ANOTHER_FIRST_NAME);
-        updatedContact.setLastName(LAST_NAME);
-        updatedContact.setPhoneNumber(TELEPHONE_NUMBER);
+        Contact updatedContact = anotherContactWithID();
 
         verify(repository).save(eq(updatedContact));
     }
@@ -148,10 +121,7 @@ public class ContactControllerTest {
     cannot_update_non_existing_contact() throws Exception {
         when(repository.withId(ID)).thenReturn(Optional.empty());
 
-        Contact update = new Contact();
-        update.setFirstName(ANOTHER_FIRST_NAME);
-        update.setLastName(LAST_NAME);
-        update.setPhoneNumber(TELEPHONE_NUMBER);
+        Contact update = anotherContactWithoutID();
 
         mockMvc.perform(put("/contacts/"+ID)
                 .contentType(APPLICATION_JSON)
@@ -162,11 +132,7 @@ public class ContactControllerTest {
     @Test
     public void
     removes_a_contact() throws Exception {
-        Contact contact = new Contact();
-        contact.setId(ID);
-        contact.setFirstName(ANOTHER_FIRST_NAME);
-        contact.setLastName(LAST_NAME);
-        contact.setPhoneNumber(TELEPHONE_NUMBER);
+        Contact contact = anotherContactWithID();
 
         when(repository.withId(ID)).thenReturn(Optional.ofNullable(contact));
 
@@ -188,17 +154,17 @@ public class ContactControllerTest {
 
 
     private static final Integer ID = 1;
+
     private static final String FIRST_NAME = "A FIRST NAME";
+
     private static final String LAST_NAME = "A LAST NAME";
+
     private static final String TELEPHONE_NUMBER = "+39 02 123456";
     private static final String ANOTHER_FIRST_NAME = "ANOTHER FIRST NAME";
-
     @InjectMocks
     private ContactController controller;
-
     @Mock
     private ContactRepository repository;
-
     private MockMvc mockMvc;
 
     @Before
@@ -209,5 +175,31 @@ public class ContactControllerTest {
 
     private String json(Object o) throws IOException {
         return new ObjectMapper().writeValueAsString(o);
+    }
+
+    private Contact aContact() {
+        Contact contact = new Contact();
+        contact.setId(ID);
+        contact.setFirstName(FIRST_NAME);
+        contact.setLastName(LAST_NAME);
+        contact.setPhoneNumber(TELEPHONE_NUMBER);
+        return contact;
+    }
+
+    private Contact anotherContactWithoutID() {
+        Contact update = new Contact();
+        update.setFirstName(ANOTHER_FIRST_NAME);
+        update.setLastName(LAST_NAME);
+        update.setPhoneNumber(TELEPHONE_NUMBER);
+        return update;
+    }
+
+    private Contact anotherContactWithID() {
+        Contact contact = new Contact();
+        contact.setId(ID);
+        contact.setFirstName(ANOTHER_FIRST_NAME);
+        contact.setLastName(LAST_NAME);
+        contact.setPhoneNumber(TELEPHONE_NUMBER);
+        return contact;
     }
 }
