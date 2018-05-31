@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -44,27 +45,29 @@ public class ContactController {
 
     @RequestMapping(value = "/{id}", method = PUT)
     public ResponseEntity<Void> update(@PathVariable("id") Integer id, @Valid @RequestBody Contact update) {
-        return handle(id, contact -> update(contact, update));
+        return execute(id, contact -> update(contact, update));
     }
 
     @RequestMapping(value = "/{id}", method = DELETE)
     public ResponseEntity<Void> delete(@PathVariable("id") Integer id) {
-        return handle(id, this::delete);
+        return execute(id, repository::delete);
     }
 
-    private ResponseEntity<Void> update(Contact contact, Contact update) {
+    private void update(Contact contact, Contact update) {
         contact.update(update);
         repository.save(contact);
+    }
+
+    private ResponseEntity<Void> modify(Contact contact, Consumer<Contact> action) {
+        action.accept(contact);
         return ResponseEntity
                 .noContent()
                 .build();
     }
 
-    private ResponseEntity<Void> delete(Contact contact) {
-        repository.delete(contact);
-        return ResponseEntity
-                .noContent()
-                .build();
+    private ResponseEntity<Void> execute(Integer id, Consumer<Contact> action) {
+        Function<Contact, ResponseEntity<Void>> handler = contact -> modify(contact, action);
+        return handle(id, handler);
     }
 
     private <Body> ResponseEntity<Body> handle(Integer id, Function<Contact, ResponseEntity<Body>> handler) {
