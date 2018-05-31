@@ -6,6 +6,7 @@ import it.xpeppers.repository.ContactRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class InMemoryContactRepository implements ContactRepository {
@@ -35,8 +36,8 @@ public class InMemoryContactRepository implements ContactRepository {
     }
 
     @Override
-    public Contact withId(Integer id) {
-        return CONTACTS.get(id);
+    public Optional<Contact> withId(Integer id) {
+        return Optional.ofNullable(CONTACTS.get(id));
     }
 
     @Override
@@ -57,7 +58,7 @@ public class InMemoryContactRepository implements ContactRepository {
     private Integer idFor(Contact contact) {
         Integer id = contact.getId();
 
-        if(id == null) {
+        if (id == null) {
             id = CONTACTS.size() + 1;
         }
 

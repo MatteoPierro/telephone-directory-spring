@@ -12,6 +12,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.hasSize;
@@ -58,7 +59,7 @@ public class ContactControllerTest {
         contact.setLastName(LAST_NAME);
         contact.setPhoneNumber(TELEPHONE_NUMBER);
 
-        when(repository.withId(ID)).thenReturn(contact);
+        when(repository.withId(ID)).thenReturn(Optional.ofNullable(contact));
 
         mockMvc.perform(get("/contacts/"+ ID))
                 .andExpect(status().isOk())
@@ -66,6 +67,15 @@ public class ContactControllerTest {
                 .andExpect(jsonPath("$.firstName", is(FIRST_NAME)))
                 .andExpect(jsonPath("$.lastName", is(LAST_NAME)))
                 .andExpect(jsonPath("$.phoneNumber", is(TELEPHONE_NUMBER)));
+    }
+
+    @Test
+    public void
+    no_contact_found_for_ID() throws Exception {
+        when(repository.withId(ID)).thenReturn(Optional.empty());
+
+        mockMvc.perform(get("/contacts/"+ ID))
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -112,7 +122,7 @@ public class ContactControllerTest {
         contact.setLastName(LAST_NAME);
         contact.setPhoneNumber(TELEPHONE_NUMBER);
 
-        when(repository.withId(ID)).thenReturn(contact);
+        when(repository.withId(ID)).thenReturn(Optional.ofNullable(contact));
 
         Contact update = new Contact();
         update.setFirstName(ANOTHER_FIRST_NAME);
@@ -135,6 +145,22 @@ public class ContactControllerTest {
 
     @Test
     public void
+    cannot_update_non_existing_contact() throws Exception {
+        when(repository.withId(ID)).thenReturn(Optional.empty());
+
+        Contact update = new Contact();
+        update.setFirstName(ANOTHER_FIRST_NAME);
+        update.setLastName(LAST_NAME);
+        update.setPhoneNumber(TELEPHONE_NUMBER);
+
+        mockMvc.perform(put("/contacts/"+ID)
+                .contentType(APPLICATION_JSON)
+                .content(json(update)))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void
     removes_a_contact() throws Exception {
         Contact contact = new Contact();
         contact.setId(ID);
@@ -142,12 +168,22 @@ public class ContactControllerTest {
         contact.setLastName(LAST_NAME);
         contact.setPhoneNumber(TELEPHONE_NUMBER);
 
-        when(repository.withId(ID)).thenReturn(contact);
+        when(repository.withId(ID)).thenReturn(Optional.ofNullable(contact));
 
         mockMvc.perform(delete("/contacts/"+ID))
                 .andExpect(status().isNoContent());
 
         verify(repository).delete(eq(contact));
+    }
+
+    @Test
+    public void
+    tries_to_removes_a_nonexisting_contact() throws Exception {
+
+        when(repository.withId(ID)).thenReturn(Optional.empty());
+
+        mockMvc.perform(delete("/contacts/"+ID))
+                .andExpect(status().isNotFound());
     }
 
 
