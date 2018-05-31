@@ -19,6 +19,36 @@ import static org.junit.Assert.assertThat;
 @SpringBootTest
 public class JPAContactRepositoryAdapterIT {
 
+    @Test
+    public void
+    save_a_contact() {
+        Contact contact = new Contact();
+        contact.setFirstName("First Name");
+        contact.setLastName("Last Name");
+        contact.setPhoneNumber("+39 329 654321");
+
+        repositoryAdapter.save(contact);
+        List<Contact> contacts = repositoryAdapter.all();
+
+        assertThat(contacts, hasSize(1));
+    }
+
+    @Test
+    public void
+    delete_a_contact() {
+        Contact contact = new Contact();
+        contact.setFirstName("First Name");
+        contact.setLastName("Last Name");
+        contact.setPhoneNumber("+39 329 654321");
+
+        repositoryAdapter.save(contact);
+        List<Contact> contacts = repositoryAdapter.all();
+        assertThat(contacts, hasSize(1));
+
+        repositoryAdapter.delete(contact);
+        assertThat(repositoryAdapter.all(), is(empty()));
+    }
+
     @Autowired
     private JPAContactRepositoryAdapter repositoryAdapter;
 
@@ -26,39 +56,7 @@ public class JPAContactRepositoryAdapterIT {
     private JPAContactRepository repository;
 
     @Before
-    public void setup() throws Exception {
+    public void setup() {
         repository.deleteAll();
-    }
-
-    @Test
-    public void
-    save_a_contact() throws Exception {
-        Contact contact = new Contact();
-        contact.setFirstName("First Name");
-        contact.setLastName("Last Name");
-        contact.setPhoneNumber("+39 329 654321");
-
-        repositoryAdapter.save(contact);
-        List<Contact> contacts = repositoryAdapter.all();
-
-        assertThat(contacts, hasSize(1));
-    }
-
-    @Test
-    public void
-    delete_a_contact() throws Exception {
-        Contact contact = new Contact();
-        contact.setFirstName("First Name");
-        contact.setLastName("Last Name");
-        contact.setPhoneNumber("+39 329 654321");
-
-        repositoryAdapter.save(contact);
-        List<Contact> contacts = repositoryAdapter.all();
-
-        assertThat(contacts, hasSize(1));
-
-        repositoryAdapter.delete(contact);
-
-        assertThat(repositoryAdapter.all(), is(empty()));
     }
 }

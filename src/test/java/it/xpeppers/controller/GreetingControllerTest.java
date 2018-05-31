@@ -15,22 +15,22 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 @RunWith(MockitoJUnitRunner.class)
 public class GreetingControllerTest {
 
-    @InjectMocks
-    GreetingController controller;
-
-    MockMvc mockMvc;
-
-    @Before
-    public void setUp() throws Exception {
-        mockMvc = standaloneSetup(controller)
-                .build();
-    }
-
     @Test
     public void
     returns_hello_world() throws Exception {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Hello World!"));
+    }
+
+    @InjectMocks
+    private GreetingController controller;
+
+    private MockMvc mockMvc;
+
+    @Before
+    public void setUp() {
+        mockMvc = standaloneSetup(controller)
+                .build();
     }
 }
