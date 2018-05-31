@@ -1,6 +1,7 @@
 package it.xpeppers.infrastructure.repository;
 
 import it.xpeppers.model.Contact;
+import it.xpeppers.model.ContactBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,6 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
+import static it.xpeppers.model.ContactBuilder.aContact;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
@@ -22,10 +24,7 @@ public class JPAContactRepositoryAdapterIT {
     @Test
     public void
     save_a_contact() {
-        Contact contact = new Contact();
-        contact.setFirstName("First Name");
-        contact.setLastName("Last Name");
-        contact.setPhoneNumber("+39 329 654321");
+        Contact contact = aContact().build();
 
         repositoryAdapter.save(contact);
         List<Contact> contacts = repositoryAdapter.all();
@@ -36,10 +35,7 @@ public class JPAContactRepositoryAdapterIT {
     @Test
     public void
     delete_a_contact() {
-        Contact contact = new Contact();
-        contact.setFirstName("First Name");
-        contact.setLastName("Last Name");
-        contact.setPhoneNumber("+39 329 654321");
+        Contact contact = aContact().build();
 
         repositoryAdapter.save(contact);
         List<Contact> contacts = repositoryAdapter.all();
