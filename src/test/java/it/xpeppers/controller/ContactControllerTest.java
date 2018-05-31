@@ -50,14 +50,15 @@ public class ContactControllerTest {
     public void
     returns_a_contact_with_a_given_id() throws Exception {
 
-        when(repository.withId(ID)).thenReturn(Optional.ofNullable(aContact()));
+        Contact aContact = aContact();
+        when(repository.withId(ID)).thenReturn(Optional.ofNullable(aContact));
 
         mockMvc.perform(get("/contacts/"+ ID))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(ID)))
-                .andExpect(jsonPath("$.firstName", is(FIRST_NAME)))
-                .andExpect(jsonPath("$.lastName", is(LAST_NAME)))
-                .andExpect(jsonPath("$.phoneNumber", is(TELEPHONE_NUMBER)));
+                .andExpect(jsonPath("$.firstName", is(aContact.getFirstName())))
+                .andExpect(jsonPath("$.lastName", is(aContact.getLastName())))
+                .andExpect(jsonPath("$.phoneNumber", is(aContact.getPhoneNumber())));
     }
 
     @Test
@@ -182,14 +183,6 @@ public class ContactControllerTest {
         contact.setLastName(LAST_NAME);
         contact.setPhoneNumber(TELEPHONE_NUMBER);
         return contact;
-    }
-
-    private Contact anotherContact() {
-        Contact update = new Contact();
-        update.setFirstName(ANOTHER_FIRST_NAME);
-        update.setLastName(LAST_NAME);
-        update.setPhoneNumber(TELEPHONE_NUMBER);
-        return update;
     }
 
     private Contact anotherContactWithID() {
