@@ -3,6 +3,7 @@ package it.xpeppers.controller;
 import it.xpeppers.repository.ContactRepository;
 import it.xpeppers.model.Contact;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,14 +30,10 @@ public class ContactController {
     }
 
     @RequestMapping(value = "/{id}", method = GET)
-    public ResponseEntity<?> withId(@PathVariable("id") Integer id) {
-        Optional<Contact> contact = repository.withId(id);
-
-        if (contact.isPresent()) {
-            return ResponseEntity.ok(contact.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Contact> withId(@PathVariable("id") Integer id) {
+        return repository.withId(id)
+                .map(ResponseEntity::ok)
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @RequestMapping(method = POST)
