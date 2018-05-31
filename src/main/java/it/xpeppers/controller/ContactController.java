@@ -3,7 +3,6 @@ package it.xpeppers.controller;
 import it.xpeppers.repository.ContactRepository;
 import it.xpeppers.model.Contact;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
+import java.util.function.Function;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -32,9 +31,7 @@ public class ContactController {
 
     @RequestMapping(value = "/{id}", method = GET)
     public ResponseEntity<Contact> withId(@PathVariable("id") Integer id) {
-        return repository.withId(id)
-                .map(ResponseEntity::ok)
-                .orElse(new ResponseEntity<>(NOT_FOUND));
+        return handle(id, ResponseEntity::ok);
     }
 
     @RequestMapping(method = POST)
@@ -47,16 +44,12 @@ public class ContactController {
 
     @RequestMapping(value = "/{id}", method = PUT)
     public ResponseEntity<Void> update(@PathVariable("id") Integer id, @Valid @RequestBody Contact update) {
-        return repository.withId(id)
-                .map(contact -> update(contact, update))
-                .orElse(new ResponseEntity<>(NOT_FOUND));
+        return handle(id, contact -> update(contact, update));
     }
 
     @RequestMapping(value = "/{id}", method = DELETE)
     public ResponseEntity<Void> delete(@PathVariable("id") Integer id) {
-        return repository.withId(id)
-                .map(this::delete)
-                .orElse(new ResponseEntity<>(NOT_FOUND));
+        return handle(id, this::delete);
     }
 
     private ResponseEntity<Void> update(Contact contact, Contact update) {
@@ -72,6 +65,12 @@ public class ContactController {
         return ResponseEntity
                 .noContent()
                 .build();
+    }
+
+    private <Body> ResponseEntity<Body> handle(Integer id, Function<Contact, ResponseEntity<Body>> handler) {
+        return repository.withId(id)
+                .map(handler)
+                .orElse(new ResponseEntity<>(NOT_FOUND));
     }
 
     private URI uriFor(Contact savedContact) {
