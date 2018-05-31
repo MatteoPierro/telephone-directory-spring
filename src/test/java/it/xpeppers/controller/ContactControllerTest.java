@@ -53,7 +53,7 @@ public class ContactControllerTest {
         Contact aContact = aContact();
         when(repository.withId(ID)).thenReturn(Optional.ofNullable(aContact));
 
-        mockMvc.perform(get("/contacts/"+ ID))
+        mockMvc.perform(get("/contacts/" + ID))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(ID)))
                 .andExpect(jsonPath("$.firstName", is(aContact.getFirstName())))
@@ -66,7 +66,7 @@ public class ContactControllerTest {
     no_contact_found_for_ID() throws Exception {
         when(repository.withId(ID)).thenReturn(Optional.empty());
 
-        mockMvc.perform(get("/contacts/"+ ID))
+        mockMvc.perform(get("/contacts/" + ID))
                 .andExpect(status().isNotFound());
     }
 
@@ -82,7 +82,7 @@ public class ContactControllerTest {
         mockMvc.perform(post("/contacts")
                 .contentType(APPLICATION_JSON)
                 .content(json(aNewContact)))
-                .andExpect(header().string("Location", "/contacts/"+savedContact.getId()))
+                .andExpect(header().string("Location", "/contacts/" + savedContact.getId()))
                 .andExpect(status().isCreated());
     }
 
@@ -107,7 +107,7 @@ public class ContactControllerTest {
         Contact update = aContact();
         update.setFirstName(ANOTHER_FIRST_NAME);
 
-        mockMvc.perform(put("/contacts/"+ID)
+        mockMvc.perform(put("/contacts/" + ID)
                 .contentType(APPLICATION_JSON)
                 .content(json(update)))
                 .andExpect(status().isNoContent());
@@ -122,7 +122,7 @@ public class ContactControllerTest {
     cannot_update_non_existing_contact() throws Exception {
         when(repository.withId(ID)).thenReturn(Optional.empty());
 
-        mockMvc.perform(put("/contacts/"+ID)
+        mockMvc.perform(put("/contacts/" + ID)
                 .contentType(APPLICATION_JSON)
                 .content(json(aContact())))
                 .andExpect(status().isNotFound());
@@ -135,7 +135,7 @@ public class ContactControllerTest {
 
         when(repository.withId(ID)).thenReturn(Optional.ofNullable(aContact));
 
-        mockMvc.perform(delete("/contacts/"+ID))
+        mockMvc.perform(delete("/contacts/" + ID))
                 .andExpect(status().isNoContent());
 
         verify(repository).delete(eq(aContact));
@@ -147,7 +147,7 @@ public class ContactControllerTest {
 
         when(repository.withId(ID)).thenReturn(Optional.empty());
 
-        mockMvc.perform(delete("/contacts/"+ID))
+        mockMvc.perform(delete("/contacts/" + ID))
                 .andExpect(status().isNotFound());
     }
 
@@ -166,6 +166,7 @@ public class ContactControllerTest {
     @Mock
     private ContactRepository repository;
     private MockMvc mockMvc;
+
     @Before
     public void setUp() {
         mockMvc = standaloneSetup(controller)
