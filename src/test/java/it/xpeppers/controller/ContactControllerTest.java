@@ -1,6 +1,7 @@
 package it.xpeppers.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.xpeppers.model.ContactBuilder;
 import it.xpeppers.repository.ContactRepository;
 import it.xpeppers.model.Contact;
 import org.junit.Before;
@@ -17,6 +18,7 @@ import java.util.Optional;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
@@ -33,7 +35,6 @@ public class ContactControllerTest {
     @Test
     public void
     returns_all_contacts() throws Exception {
-
         Contact aContact = aContact();
         when(repository.all()).thenReturn(singletonList(aContact));
 
@@ -49,8 +50,7 @@ public class ContactControllerTest {
     @Test
     public void
     returns_a_contact_with_a_given_id() throws Exception {
-
-        Contact aContact = aContact();
+        Contact aContact = aContactWithId(ID);
         when(repository.withId(ID)).thenReturn(Optional.ofNullable(aContact));
 
         mockMvc.perform(get("/contacts/" + ID))
@@ -73,10 +73,8 @@ public class ContactControllerTest {
     @Test
     public void
     saves_a_valid_contact() throws Exception {
-
         Contact aNewContact = aNewContact();
         Contact savedContact = aContact();
-
         when(repository.save(aNewContact)).thenReturn(savedContact);
 
         mockMvc.perform(post("/contacts")
@@ -89,32 +87,32 @@ public class ContactControllerTest {
     @Test
     public void
     does_not_saves_an_invalid_contact() throws Exception {
-        verify(repository, never()).save(any());
-
-        Contact invalidContact = new Contact();
         mockMvc.perform(post("/contacts")
                 .contentType(APPLICATION_JSON)
-                .content(json(invalidContact)))
+                .content(json(AN_INVALID_CONTACT)))
                 .andExpect(status().isBadRequest());
+
+        verify(repository, never()).save(any());
     }
 
     @Test
     public void
     updates_a_valid_contact() throws Exception {
-        Contact aContact = aContact();
-        when(repository.withId(ID)).thenReturn(Optional.ofNullable(aContact));
+        Contact contact = aContactWithId(ID);
+        when(repository.withId(ID)).thenReturn(Optional.of(contact));
 
-        Contact update = aContact();
-        update.setFirstName(ANOTHER_FIRST_NAME);
+        Contact update = ContactBuilder.aContact()
+                .withId(ID)
+                .withFirstName(ANOTHER_FIRST_NAME)
+                .build();
 
         mockMvc.perform(put("/contacts/" + ID)
                 .contentType(APPLICATION_JSON)
                 .content(json(update)))
                 .andExpect(status().isNoContent());
 
-        Contact updatedContact = anotherContactWithID();
-
-        verify(repository).save(eq(updatedContact));
+        verify(repository).save(eq(contact));
+        assertThat(contact.getFirstName(), is(ANOTHER_FIRST_NAME));
     }
 
     @Test
@@ -131,9 +129,8 @@ public class ContactControllerTest {
     @Test
     public void
     removes_a_contact() throws Exception {
-        Contact aContact = aContact();
-
-        when(repository.withId(ID)).thenReturn(Optional.ofNullable(aContact));
+        Contact aContact = aContactWithId(ID);
+        when(repository.withId(ID)).thenReturn(Optional.of(aContact));
 
         mockMvc.perform(delete("/contacts/" + ID))
                 .andExpect(status().isNoContent());
@@ -143,8 +140,7 @@ public class ContactControllerTest {
 
     @Test
     public void
-    tries_to_removes_a_nonexisting_contact() throws Exception {
-
+    tries_to_removes_a_not_existing_contact() throws Exception {
         when(repository.withId(ID)).thenReturn(Optional.empty());
 
         mockMvc.perform(delete("/contacts/" + ID))
@@ -153,16 +149,12 @@ public class ContactControllerTest {
 
 
     private static final Integer ID = 1;
-
-    private static final String FIRST_NAME = "A FIRST NAME";
-
-    private static final String LAST_NAME = "A LAST NAME";
-
-    private static final String TELEPHONE_NUMBER = "+39 02 123456";
-
     private static final String ANOTHER_FIRST_NAME = "ANOTHER FIRST NAME";
+    private static final Contact AN_INVALID_CONTACT = new Contact();
+
     @InjectMocks
     private ContactController controller;
+
     @Mock
     private ContactRepository repository;
     private MockMvc mockMvc;
@@ -178,28 +170,16 @@ public class ContactControllerTest {
     }
 
     private Contact aContact() {
-        Contact contact = new Contact();
-        contact.setId(ID);
-        contact.setFirstName(FIRST_NAME);
-        contact.setLastName(LAST_NAME);
-        contact.setPhoneNumber(TELEPHONE_NUMBER);
-        return contact;
-    }
-
-    private Contact anotherContactWithID() {
-        Contact contact = new Contact();
-        contact.setId(ID);
-        contact.setFirstName(ANOTHER_FIRST_NAME);
-        contact.setLastName(LAST_NAME);
-        contact.setPhoneNumber(TELEPHONE_NUMBER);
-        return contact;
+        return aContactWithId(ID);
     }
 
     private Contact aNewContact() {
-        Contact contact = new Contact();
-        contact.setFirstName(FIRST_NAME);
-        contact.setLastName(LAST_NAME);
-        contact.setPhoneNumber(TELEPHONE_NUMBER);
-        return contact;
+        return aContactWithId(null);
+    }
+
+    private Contact aContactWithId(Integer id) {
+        return ContactBuilder.aContact()
+                .withId(id)
+                .build();
     }
 }

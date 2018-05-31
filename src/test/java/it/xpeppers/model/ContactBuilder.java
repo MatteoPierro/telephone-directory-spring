@@ -6,6 +6,7 @@ public class ContactBuilder {
     private static final String A_VALID_LAST_NAME = "A LAST NAME";
     private static final String A_VALID_NUMBER = "+39 329 123456";
 
+    private Integer id = null;
     private String firstName = A_VALID_FIRST_NAME;
     private String lastName = A_VALID_LAST_NAME;
     private String phoneNumber = A_VALID_NUMBER;
@@ -15,6 +16,11 @@ public class ContactBuilder {
     }
 
     private ContactBuilder() {
+    }
+
+    public ContactBuilder withId(Integer id) {
+        this.id = id;
+        return this;
     }
 
     public ContactBuilder withFirstName(String firstName) {
@@ -34,6 +40,7 @@ public class ContactBuilder {
 
     public Contact build() {
         Contact contact = new Contact();
+        contact.setId(id);
         contact.setFirstName(firstName);
         contact.setLastName(lastName);
         contact.setPhoneNumber(phoneNumber);
