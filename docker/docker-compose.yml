@@ -1,0 +1,32 @@
+version: '3'
+services:
+  phonebook-be:
+    image: "phonebook-be:latest"
+    ports:
+      - "9000:9000"
+    depends_on:
+      - "phonebook-db"
+    networks:
+      - phonebook-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+
+  phonebook-db:
+    image: "postgres:9.6-alpine"
+    volumes:
+      - phonebook-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=contacts
+    networks:
+      - phonebook-network
+
+volumes:
+  phonebook-data:
+
+networks:
+  phonebook-network:
